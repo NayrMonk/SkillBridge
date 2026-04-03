@@ -6,7 +6,7 @@ import { asyncHandler } from '../middleware/errorHandler.ts';
 const router = Router();
 
 // AI Test Generator Service
-class AITestGenerator {
+export class AITestGenerator {
   static async generateQuestions(category: string, difficulty: string, count: number): Promise<any[]> {
     // This is a mock implementation - in production, this would call an LLM API
     const questionTemplates: Record<string, any[]> = {
@@ -195,10 +195,68 @@ router.post('/templates', requireRole(['client', 'admin']), asyncHandler(async (
     questions
   } = req.body;
 
-  if (!title || !category || !durationMinutes || !passingScore) {
+  // Validation
+  if (!title || typeof title !== 'string' || title.trim().length === 0) {
     return res.status(400).json({
-      error: 'Title, category, duration, and passing score are required'
+      error: 'Title is required and must be a non-empty string'
     });
+  }
+
+  if (!category || typeof category !== 'string' || category.trim().length === 0) {
+    return res.status(400).json({
+      error: 'Category is required and must be a non-empty string'
+    });
+  }
+
+  if (!durationMinutes || typeof durationMinutes !== 'number' || durationMinutes <= 0 || durationMinutes > 480) {
+    return res.status(400).json({
+      error: 'Duration minutes is required and must be a positive number between 1 and 480'
+    });
+  }
+
+  if (!passingScore || typeof passingScore !== 'number' || passingScore < 0 || passingScore > 100) {
+    return res.status(400).json({
+      error: 'Passing score is required and must be a number between 0 and 100'
+    });
+  }
+
+  if (isAIGenerated !== undefined && typeof isAIGenerated !== 'boolean') {
+    return res.status(400).json({
+      error: 'isAIGenerated must be a boolean'
+    });
+  }
+
+  if (!isAIGenerated && (!questions || !Array.isArray(questions) || questions.length === 0)) {
+    return res.status(400).json({
+      error: 'Questions array is required for manual templates and must not be empty'
+    });
+  }
+
+  if (!isAIGenerated && questions) {
+    const allowedQuestionTypes = ['mcq', 'coding', 'written', 'file_upload'];
+    for (let i = 0; i < questions.length; i++) {
+      const q = questions[i];
+      if (!q.questionType || !q.questionText) {
+        return res.status(400).json({
+          error: `Question ${i + 1}: questionType and questionText are required`
+        });
+      }
+      if (!allowedQuestionTypes.includes(q.questionType)) {
+        return res.status(400).json({
+          error: `Question ${i + 1}: questionType must be one of: ${allowedQuestionTypes.join(', ')}`
+        });
+      }
+      if (q.questionType === 'mcq' && (!q.options || !Array.isArray(q.options) || q.options.length < 2)) {
+        return res.status(400).json({
+          error: `Question ${i + 1}: MCQ questions must have at least 2 options`
+        });
+      }
+      if (q.questionType === 'mcq' && !q.correctAnswer) {
+        return res.status(400).json({
+          error: `Question ${i + 1}: MCQ questions must have a correct answer`
+        });
+      }
+    }
   }
 
   const client = await db.connect();
@@ -347,6 +405,23 @@ router.post('/attempts', requireRole(['freelancer', 'admin']), asyncHandler(asyn
 router.post('/attempts/:id/submit', requireRole(['freelancer', 'admin']), asyncHandler(async (req: AuthRequest, res) => {
   const { id } = req.params;
   const { answers } = req.body;
+
+  // Validation
+  if (!answers || !Array.isArray(answers)) {
+    return res.status(400).json({
+      error: 'Answers must be provided as an array'
+    });
+  }
+
+  // Validate each answer has required fields
+  for (let i = 0; i < answers.length; i++) {
+    const answer = answers[i];
+    if (!answer.questionId || !answer.answer) {
+      return res.status(400).json({
+        error: `Answer ${i + 1}: questionId and answer are required`
+      });
+    }
+  }
 
   // Get attempt
   const attemptResult = await db.query(

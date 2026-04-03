@@ -28,15 +28,27 @@ const authAdmin     = () => mockQuery.mockResolvedValueOnce({ rows: [activeAdmin
 const expiredToken = jwt.sign(FREELANCER_TOKEN_PAYLOAD, JWT_SECRET, { expiresIn: '-1s' });
 const invalidToken = 'not.a.valid.jwt';
 
+// Helper function to make typed requests
+function makeRequest(method: 'get' | 'post' | 'put' | 'delete' | 'patch', path: string) {
+  const req = request(app);
+  switch (method) {
+    case 'get': return req.get(path);
+    case 'post': return req.post(path);
+    case 'put': return req.put(path);
+    case 'delete': return req.delete(path);
+    case 'patch': return req.patch(path);
+  }
+}
+
 // Shared auth failure suite — call inside describe blocks that need full coverage
 const sharedAuthTests = (method: 'get' | 'post' | 'put' | 'delete' | 'patch', path: string, body?: object) => {
   it('returns 401 when no token', async () => {
-    const res = await (request(app) as any)[method](path).send(body);
+    const res = await makeRequest(method, path).send(body);
     expect(res.status).toBe(401);
   });
 
   it('returns 401 for an invalid (malformed) token', async () => {
-    const res = await (request(app) as any)[method](path)
+    const res = await makeRequest(method, path)
       .set('Authorization', `Bearer ${invalidToken}`)
       .send(body);
     expect(res.status).toBe(401);
@@ -44,7 +56,7 @@ const sharedAuthTests = (method: 'get' | 'post' | 'put' | 'delete' | 'patch', pa
   });
 
   it('returns 401 for an expired token', async () => {
-    const res = await (request(app) as any)[method](path)
+    const res = await makeRequest(method, path)
       .set('Authorization', `Bearer ${expiredToken}`)
       .send(body);
     expect(res.status).toBe(401);
@@ -53,7 +65,7 @@ const sharedAuthTests = (method: 'get' | 'post' | 'put' | 'delete' | 'patch', pa
 
   it('returns 401 when token user no longer exists in DB', async () => {
     mockQuery.mockResolvedValueOnce({ rows: [] });
-    const res = await (request(app) as any)[method](path)
+    const res = await makeRequest(method, path)
       .set('Authorization', `Bearer ${freelancerToken}`)
       .send(body);
     expect(res.status).toBe(401);
@@ -62,7 +74,7 @@ const sharedAuthTests = (method: 'get' | 'post' | 'put' | 'delete' | 'patch', pa
 
   it('returns 403 when account is suspended', async () => {
     mockQuery.mockResolvedValueOnce({ rows: [{ ...activeFreelancerRow, status: 'suspended' }] });
-    const res = await (request(app) as any)[method](path)
+    const res = await makeRequest(method, path)
       .set('Authorization', `Bearer ${freelancerToken}`)
       .send(body);
     expect(res.status).toBe(403);
