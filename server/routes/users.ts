@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { db } from '../index';
-import { AuthRequest } from '../middleware/auth';
-import { asyncHandler } from '../middleware/errorHandler';
+import { db } from '../index.ts';
+import { AuthRequest } from '../middleware/auth.ts';
+import { asyncHandler } from '../middleware/errorHandler.ts';
 
 const router = Router();
 

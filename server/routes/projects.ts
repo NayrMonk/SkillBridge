@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { db, redis } from '../index';
-import { AuthRequest, requireRole } from '../middleware/auth';
-import { asyncHandler } from '../middleware/errorHandler';
+import { db, redis } from '../index.ts';
+import { AuthRequest, requireRole } from '../middleware/auth.ts';
+import { asyncHandler } from '../middleware/errorHandler.ts';
 import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();

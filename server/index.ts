@@ -7,23 +7,23 @@ import { Pool } from 'pg';
 import { createClient } from 'redis';
 
 // Import routes
-import authRoutes from './routes/auth';
-import userRoutes from './routes/users';
-import projectRoutes from './routes/projects';
-import applicationRoutes from './routes/applications';
-import messageRoutes from './routes/messages';
-import paymentRoutes from './routes/payments';
-import testRoutes from './routes/tests';
-import adminRoutes from './routes/admin';
-import dashboardRoutes from './routes/dashboard';
+import authRoutes from './routes/auth.ts';
+import userRoutes from './routes/users.ts';
+import projectRoutes from './routes/projects.ts';
+import applicationRoutes from './routes/applications.ts';
+import messageRoutes from './routes/messages.ts';
+import paymentRoutes from './routes/payments.ts';
+import testRoutes from './routes/tests.ts';
+import adminRoutes from './routes/admin.ts';
+import dashboardRoutes from './routes/dashboard.ts';
 
 // Import middleware
-import { authenticateToken } from './middleware/auth';
-import { errorHandler } from './middleware/errorHandler';
+import { authenticateToken } from './middleware/auth.ts';
+import { errorHandler } from './middleware/errorHandler.ts';
 
 // Import services
-import { MessageService } from './services/messageService';
-import { NotificationService } from './services/notificationService';
+import { MessageService } from './services/messageService.ts';
+import { NotificationService } from './services/notificationService.ts';
 import jwt from 'jsonwebtoken';
 
 dotenv.config();

@@ -67,7 +67,7 @@ npm install
 
 **Terminal 1 — Backend API:**
 ```bash
-npx nodemon server/index.ts
+npx tsx server/index.ts
 ```
 Runs at: http://localhost:3001
 

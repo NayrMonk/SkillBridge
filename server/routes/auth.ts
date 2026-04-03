@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
-import { db } from '../index';
-import { generateToken } from '../middleware/auth';
-import { asyncHandler } from '../middleware/errorHandler';
+import jwt from 'jsonwebtoken';
+import { db } from '../index.ts';
+import { generateToken, JWT_SECRET } from '../middleware/auth.ts';
+import { asyncHandler } from '../middleware/errorHandler.ts';
 
 const router = Router();
 const SALT_ROUNDS = 12;
@@ -189,9 +190,6 @@ router.get('/me', asyncHandler(async (req: any, res) => {
     return res.status(401).json({ error: 'No token provided' });
   }
 
-  const jwt = require('jsonwebtoken');
-  const { JWT_SECRET } = require('../middleware/auth');
-  
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     
