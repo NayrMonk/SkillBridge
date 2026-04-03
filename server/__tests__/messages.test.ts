@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 import request from 'supertest';
 import { app } from './testApp';
 import { db } from '../index';

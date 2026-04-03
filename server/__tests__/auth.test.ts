@@ -1,3 +1,4 @@
+/// <reference types="jest" />
 import request from 'supertest';
 import bcrypt from 'bcryptjs';
 import { app } from './testApp';

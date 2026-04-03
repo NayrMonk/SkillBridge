@@ -89,8 +89,8 @@ app.use('/api/admin', authenticateToken, adminRoutes);
 app.use('/api/dashboard', authenticateToken, dashboardRoutes);
 
 // Socket.IO for real-time messaging
-const messageService = new MessageService(db, redis);
-const notificationService = new NotificationService(db, redis);
+const messageService = new MessageService(db, redis as any);
+const notificationService = new NotificationService(db, redis as any);
 
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
