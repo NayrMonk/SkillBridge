@@ -29,7 +29,7 @@ const authClient = () => mockQuery.mockResolvedValueOnce({ rows: [activeClientRo
 
 const expiredAdminToken = jwt.sign(ADMIN_TOKEN_PAYLOAD, JWT_SECRET, { expiresIn: '-1s' });
 const invalidToken = 'this.is.not.a.valid.jwt';
-const wrongSecretToken = jwt.sign(ADMIN_TOKEN_PAYLOAD, 'wrong-secret');
+//const wrongSecretToken = jwt.sign(ADMIN_TOKEN_PAYLOAD, 'wrong-secret');
 
 // ── GET /api/admin/stats ───────────────────────────────────────────────────────
 

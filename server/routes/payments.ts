@@ -112,7 +112,7 @@ router.get('/transactions', asyncHandler(async (req: AuthRequest, res) => {
 router.post('/deposit/intent', asyncHandler(async (req: AuthRequest, res) => {
   const { amount } = req.body;
 
-  if (!amount || amount < 10) {
+  if (!amount || amount < 10 || typeof amount !== 'number') {
     return res.status(400).json({ error: 'Minimum deposit amount is $10' });
   }
 
@@ -140,6 +140,10 @@ router.post('/deposit/intent', asyncHandler(async (req: AuthRequest, res) => {
 // Confirm deposit (webhook or manual confirmation)
 router.post('/deposit/confirm', asyncHandler(async (req: AuthRequest, res) => {
   const { paymentIntentId } = req.body;
+
+  if (!paymentIntentId || typeof paymentIntentId !== 'string') {
+    return res.status(400).json({ error: 'paymentIntentId is required' });
+  }
 
   try {
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
@@ -195,6 +199,10 @@ router.post('/withdraw', asyncHandler(async (req: AuthRequest, res) => {
 
   if (!amount || amount < 50) {
     return res.status(400).json({ error: 'Minimum withdrawal amount is $50' });
+  }
+
+  if (!method || typeof method !== 'string') {
+    return res.status(400).json({ error: 'Withdrawal method is required' });
   }
 
   // Get wallet
@@ -262,8 +270,8 @@ router.post('/withdraw', asyncHandler(async (req: AuthRequest, res) => {
 router.post('/escrow/fund', requireRole(['client', 'admin']), asyncHandler(async (req: AuthRequest, res) => {
   const { contractId, milestoneId, amount } = req.body;
 
-  if (!contractId || !amount) {
-    return res.status(400).json({ error: 'Contract ID and amount are required' });
+  if (!contractId || !amount || typeof amount !== 'number' || amount <= 0) {
+    return res.status(400).json({ error: 'Contract ID and valid amount are required' });
   }
 
   // Verify contract ownership
@@ -358,6 +366,10 @@ router.post('/escrow/fund', requireRole(['client', 'admin']), asyncHandler(async
 // Release escrow payment (client)
 router.post('/escrow/release', requireRole(['client', 'admin']), asyncHandler(async (req: AuthRequest, res) => {
   const { escrowId } = req.body;
+
+  if (!escrowId || (typeof escrowId !== 'string' && typeof escrowId !== 'number')) {
+    return res.status(400).json({ error: 'escrowId is required' });
+  }
 
   // Get escrow
   const escrowResult = await db.query(
