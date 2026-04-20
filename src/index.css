@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ─── SkillBridge Deep Forest Design System ─── */
+    --background:           244 246 244;   /* #F4F6F4 warm off-white */
+    --foreground:           17 23 20;      /* #111714 */
+    --card:                 255 255 255;
+    --card-foreground:      17 23 20;
+    --popover:              255 255 255;
+    --popover-foreground:   17 23 20;
+    --primary:              26 107 71;     /* #1A6B47 brand green */
+    --primary-foreground:   255 255 255;
+    --secondary:            234 245 239;   /* #EAF5EF accent-soft */
+    --secondary-foreground: 18 77 51;      /* #124D33 */
+    --muted:                244 246 244;
+    --muted-foreground:     143 168 154;   /* #8FA89A */
+    --accent:               234 245 239;
+    --accent-foreground:    18 77 51;
+    --destructive:          153 27 27;     /* #991B1B */
+    --destructive-foreground: 255 255 255;
+    --border:               232 240 235;   /* #E8F0EB */
+    --input:                200 213 207;   /* #C8D5CF */
+    --ring:                 26 107 71;
+    --radius:               0.75rem;
+
+    /* Sidebar — Deep Forest dark */
+    --sidebar-background:   14 27 20;      /* #0E1B14 */
+    --sidebar-foreground:   232 245 238;   /* rgba(232,245,238,1) */
+    --sidebar-primary:      26 107 71;
+    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-accent:       255 255 255;   /* used with opacity */
+    --sidebar-accent-foreground: 232 245 238;
+    --sidebar-border:       232 245 238;   /* used with opacity */
+    --sidebar-ring:         26 107 71;
+
+    /* Status colors */
+    --success:              22 101 52;     /* #166534 */
+    --success-bg:           220 252 231;   /* #DCFCE7 */
+    --warn:                 146 64 14;     /* #92400E */
+    --warn-bg:              254 243 199;   /* #FEF3C7 */
+    --info:                 30 64 175;     /* #1E40AF */
+    --info-bg:              219 234 254;   /* #DBEAFE */
+  }
+
+  /* No dark mode override — Deep Forest is the only theme */
+
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: rgb(var(--background));
+    color: rgb(var(--foreground));
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: rgb(17 23 20);
+  }
+
+  h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 700;
+    color: rgb(17 23 20);
+  }
+
+  h1 { font-size: clamp(2rem, 5vw, 3rem); }
+  h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); }
+  h3 { font-size: 1.5rem; }
+  h4 { font-size: 1.125rem; }
+
+  a {
+    color: rgb(var(--primary));
+    transition: color 0.15s;
+  }
+  a:hover { color: rgb(18 77 51); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: rgb(var(--background)); }
+  ::-webkit-scrollbar-thumb { background: rgb(200 213 207); border-radius: 3px; }
+}
+
+@layer components {
+  /* ── Sidebar ── */
+  .sb-sidebar {
+    background-color: rgb(14 27 20);
+    border-right: 1px solid rgba(232, 245, 238, 0.07);
+  }
+
+  .sb-sidebar-link {
+    color: rgba(232, 245, 238, 0.75);
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .sb-sidebar-link:hover {
+    background: rgba(232, 245, 238, 0.07);
+    color: rgba(232, 245, 238, 0.95);
+  }
+  .sb-sidebar-link.active {
+    background: rgba(26, 107, 71, 0.2);
+    color: #fff;
+    font-weight: 700;
+  }
+  .sb-sidebar-link.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: rgb(26 107 71);
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* ── Topbar ── */
+  .sb-topbar {
+    background: rgba(244, 246, 244, 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgb(var(--border));
+    height: 60px;
+  }
+
+  /* ── Panel / Card ── */
+  .sb-panel {
+    background: white;
+    border: 1px solid rgb(var(--border));
+    border-radius: var(--radius);
+  }
+  .sb-panel-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgb(var(--border));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sb-panel-body { padding: 1.25rem 1.5rem; }
+
+  /* ── Stat cards ── */
+  .sb-stat-card {
+    background: white;
+    border: 1px solid rgb(var(--border));
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .sb-stat-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+    transform: translateY(-1px);
+  }
+  .sb-stat-val {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 2rem;
+    color: rgb(17 23 20);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .sb-stat-label { font-size: 0.8125rem; color: rgb(143 168 154); font-weight: 500; }
+
+  /* ── Project cards ── */
+  .sb-project-card {
+    background: white;
+    border: 1px solid rgb(var(--border));
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sb-project-card:hover {
+    box-shadow: 0 8px 36px rgba(0,0,0,0.11);
+    transform: translateY(-2px);
+    border-color: rgb(200 213 207);
+  }
+  .sb-project-card.hot {
+    border-top: 3px solid #FF4500;
+  }
+  .sb-project-card.featured {
+    border-top: 3px solid #F59E0B;
+    box-shadow: 0 2px 12px rgba(245, 158, 11, 0.15);
+  }
+
+  /* ── Badges ── */
+  .sb-badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; }
+  .sb-badge-verified  { background: #DCFCE7; color: #166534; border: 1px solid #166534; }
+  .sb-badge-active    { background: rgba(26,107,71,0.09); color: #124D33; border: 1px solid rgba(26,107,71,0.3); }
+  .sb-badge-hot       { background: #FF4500; color: white; }
+  .sb-badge-featured  { background: linear-gradient(135deg, #F59E0B, #EF4444); color: white; }
+  .sb-badge-pending   { background: #FEF3C7; color: #92400E; border: 1px solid #92400E; }
+  .sb-badge-hired     { background: #DCFCE7; color: #166534; border: 1px solid #166534; }
+  .sb-badge-rejected  { background: #FEE2E2; color: #991B1B; border: 1px solid #991B1B; }
+
+  /* ── Verify nudge banner ── */
+  .sb-verify-nudge {
+    background: linear-gradient(135deg, #1A6B47, #22885C);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .sb-verify-nudge h4 { color: white; font-size: 1.125rem; margin-bottom: 0.2rem; }
+  .sb-verify-nudge p  { color: rgba(255,255,255,0.95); font-size: 0.875rem; margin: 0; }
+
+  /* ── Balance card ── */
+  .sb-balance-card {
+    background: linear-gradient(135deg, #1A6B47 0%, #22885C 100%);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    color: white;
+  }
+  .sb-balance-amount {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 3rem;
+    line-height: 1;
+    color: white;
+  }
+
+  /* ── Message bubbles ── */
+  .sb-bubble-me    { background: rgb(26 107 71); color: white; border-radius: 1.25rem 1.25rem 0.25rem 1.25rem; }
+  .sb-bubble-them  { background: white; color: rgb(17 23 20); border: 1px solid rgb(232 240 235); border-radius: 1.25rem 1.25rem 1.25rem 0.25rem; }
+
+  /* ── Form elements ── */
+  .sb-input {
+    border: 1.5px solid rgb(200 213 207);
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.875rem;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    color: rgb(17 23 20);
+    background: white;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    width: 100%;
+  }
+  .sb-input:focus {
+    outline: none;
+    border-color: rgb(26 107 71);
+    box-shadow: 0 0 0 3px rgba(26, 107, 71, 0.1);
+  }
+  .sb-label { font-size: 0.8125rem; font-weight: 700; color: rgb(45 56 48); margin-bottom: 0.375rem; display: block; }
+
+  /* ── Toast (override sonner) ── */
+  [data-sonner-toast][data-type="success"] { background: white; border-left: 4px solid rgb(26 107 71); }
+  [data-sonner-toast][data-type="error"]   { background: white; border-left: 4px solid rgb(153 27 27); }
+}
+
+/* ── Utility overrides ── */
+.font-display { font-family: 'Instrument Serif', Georgia, serif; }
+.text-brand   { color: rgb(26 107 71); }
+.bg-brand     { background-color: rgb(26 107 71); }
+.bg-canvas    { background-color: rgb(244 246 244); }
+.bg-sidebar   { background-color: rgb(14 27 20); }
